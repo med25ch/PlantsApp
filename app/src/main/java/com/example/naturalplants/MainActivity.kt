@@ -7,8 +7,11 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -22,7 +25,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.naturalplants.data.plants
 import com.example.naturalplants.ui.theme.NaturalPlantsTheme
+import com.example.naturalplants.uicomponents.PlantRow
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -74,13 +79,19 @@ fun AppScaffold(modifier: Modifier = Modifier){
     ) {innerPadding ->
 
         Column(
-            modifier = Modifier.padding(innerPadding),
+            modifier = modifier.padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
-            Text(
-                modifier = Modifier.padding(8.dp),
-                text = "Content"
-            )
+            LazyColumn{
+
+                items(plants) {plant ->
+                    PlantRow(plantName = plant.name, plantDetails = plant.description,plant.imageRes)
+
+                    // Divider
+                    Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
+                }
+
+            }
         }
 
     }
