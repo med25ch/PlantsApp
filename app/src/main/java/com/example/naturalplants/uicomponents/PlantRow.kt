@@ -3,6 +3,7 @@ package com.example.naturalplants.uicomponents
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,20 +30,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.naturalplants.R
+import com.example.naturalplants.models.Plant
 
 
 @Composable
-fun PlantRow(plantName : String,plantDetails : String,plantImage : Int){
+fun PlantRow(plant : Plant,
+             onItemClick: (Plant) -> Unit){
 
     Row(
         verticalAlignment = Alignment.Top,
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
+            .clickable { onItemClick(plant) }
 
     ) {
         Image(
-            painter = painterResource(id = plantImage),
+            painter = painterResource(id = plant.imageRes),
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(100.dp)
@@ -58,9 +62,9 @@ fun PlantRow(plantName : String,plantDetails : String,plantImage : Int){
                 .fillMaxWidth()
                 .padding(start = 5.dp)
         ){
-            Text(text = plantName, style = MaterialTheme.typography.titleLarge)
+            Text(text = plant.name, style = MaterialTheme.typography.titleLarge)
             Spacer(modifier = Modifier.size(8.dp))
-            Text(text = plantDetails)
+            Text(text = plant.description)
         }
     }
 }
@@ -69,5 +73,5 @@ fun PlantRow(plantName : String,plantDetails : String,plantImage : Int){
 @Preview(showBackground = true)
 @Composable
 fun PlantRowPreview(){
-    PlantRow("Plant Name","Plant details",R.drawable.cilantro)
+    //PlantRow("Plant Name","Plant details",R.drawable.cilantro)
 }

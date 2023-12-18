@@ -1,6 +1,8 @@
 package com.example.naturalplants
 
 import android.os.Bundle
+import android.os.Debug
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +25,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.naturalplants.data.plants
@@ -82,10 +85,16 @@ fun AppScaffold(modifier: Modifier = Modifier){
             modifier = modifier.padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
+
+            val context = LocalContext.current
+
             LazyColumn{
 
                 items(plants) {plant ->
-                    PlantRow(plantName = plant.name, plantDetails = plant.description,plant.imageRes)
+
+                    PlantRow(plant, onItemClick = {plant ->
+                        Toast.makeText(context,"Item : ${plant.name} Clicked",Toast.LENGTH_SHORT).show()
+                    })
 
                     // Divider
                     Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
