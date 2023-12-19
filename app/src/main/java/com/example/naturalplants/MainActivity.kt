@@ -28,7 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.example.naturalplants.data.plants
+import com.example.naturalplants.navigation.NavigationItem
+import com.example.naturalplants.screens.HomeScreenUI
+import com.example.naturalplants.screens.PlantDetailsScreen
 import com.example.naturalplants.ui.theme.NaturalPlantsTheme
 import com.example.naturalplants.uicomponents.PlantRow
 
@@ -42,7 +52,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppScaffold()
+                    AppNavHost(navController = rememberNavController())
                 }
             }
         }
@@ -50,58 +60,23 @@ class MainActivity : ComponentActivity() {
 }
 
 
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    NaturalPlantsTheme {
-        AppScaffold()
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun AppScaffold(modifier: Modifier = Modifier){
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text("Natural Plants")
-                }
-            )
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
-                Icon(Icons.Default.Add, contentDescription = "Add")
-            }
+fun AppNavHost(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    startDestination: String = NavigationItem.HomeScreen.route,
+) {
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = startDestination
+    ) {
+        composable(NavigationItem.HomeScreen.route) {
+            HomeScreenUI(navController = navController)
         }
-    ) {innerPadding ->
-
-        Column(
-            modifier = modifier.padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
-
-            val context = LocalContext.current
-
-            LazyColumn{
-
-                items(plants) {plant ->
-
-                    PlantRow(plant, onItemClick = {plant ->
-                        Toast.makeText(context,"Item : ${plant.name} Clicked",Toast.LENGTH_SHORT).show()
-                    })
-
-                    // Divider
-                    Divider(color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.2f))
-                }
-
-            }
+        composable(NavigationItem.DetailsScreen.route + "/{plantId}" ,
+            arguments = listOf(navArgument("plantId") { type = NavType.IntType })) {backStackEntry->
+            PlantDetailsScreen(navController, plantID = backStackEntry.arguments?.getInt("plantId"))
         }
-
     }
 }
